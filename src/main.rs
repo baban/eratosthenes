@@ -12,9 +12,8 @@ fn main() {
             j += i;
         }
     }
-    for i in 1..max {
-        if table[i] != 0 {
-            print!("{} ", i);
-        }
+    let results = table.iter().filter(|i| **i != 0 as usize);
+    for i in results {
+        print!("{} ", i);
     }
 }
