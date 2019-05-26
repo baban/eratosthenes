@@ -1,0 +1,7 @@
+[package]
+name = "eratosthenes"
+version = "0.1.0"
+authors = ["masanao.matsubara <m_matsubara@okwave.co.jp>"]
+edition = "2018"
+
+[dependencies]
