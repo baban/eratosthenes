@@ -13,7 +13,6 @@ fn main() {
         }
     }
     let results = table.iter().filter(|i| **i != 0 as usize);
-    for i in results {
-        print!("{} ", i);
-    }
+    println!("primes: {}", results.count());
+    // for i in results {print!("{} ", i);}
 }
