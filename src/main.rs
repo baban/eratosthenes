@@ -2,7 +2,6 @@ fn eratosthenes(max: usize) -> usize {
     let limit = (max as f32).sqrt().floor() as usize;
     let mut table = vec![0; max];
     for i in 1..(max-1) { table[i] = i }
-    //table.iter().for_each(|i| print!("{} ", i) );
     for i in 2..limit {
         let mut j = i;
         while max > j + i {
