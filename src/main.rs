@@ -1,3 +1,6 @@
+#![feature(test)]
+extern crate test;
+
 fn eratosthenes(max: usize) -> usize {
     let limit = (max as f32).sqrt().floor() as usize;
     let mut table = vec![0; max];
@@ -22,9 +25,15 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use test::Bencher;
 
     #[test]
     fn eratosthenes_works() {
         assert_eq!(170,  eratosthenes(1000));
+    }
+
+    #[bench]
+    fn bench_eratosthenes(b: &mut Bencher) {
+        b.iter(|| eratosthenes(10000000));
     }
 }
