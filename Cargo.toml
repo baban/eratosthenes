@@ -5,3 +5,4 @@ authors = ["masanao.matsubara <m_matsubara@okwave.co.jp>"]
 edition = "2018"
 
 [dependencies]
+bencher = "0.1.5"
