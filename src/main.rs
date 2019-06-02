@@ -18,3 +18,13 @@ fn main() {
    
     // for i in results {print!("{} ", i);}
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn eratosthenes_works() {
+        assert_eq!(170,  eratosthenes(1000));
+    }
+}
