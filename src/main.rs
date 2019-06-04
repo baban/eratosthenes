@@ -1,5 +1,8 @@
 #![feature(test)]
 extern crate test;
+extern crate rayon;
+
+use rayon::prelude::*;
 
 fn sift_table(max: usize, start: usize, end: usize) -> Vec<usize> {
     let len = end - start;
@@ -28,6 +31,12 @@ fn eratosthenes(max: usize) -> usize {
     
     // 分割は偶数にする前提
     let limit = (max as f32 / 4.0).floor() as usize;
+    /*
+    let result = vec![0, 1, 2, 3]
+        .par_iter()
+        .map(|i| sift_table(max, i * limit, (i+1) * limit) )
+        .reduce_with( |r1, r2| r1.append(r2) );
+    */
     let mut table1 = sift_table(max, 0, limit);
     let mut table2 = sift_table(max, limit, limit * 2);
     let mut table3 = sift_table(max, limit * 2, limit * 3);
