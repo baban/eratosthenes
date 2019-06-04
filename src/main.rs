@@ -26,35 +26,27 @@ fn sift_table(max: usize, start: usize, end: usize) -> Vec<usize> {
 }
 
 fn eratosthenes(max: usize) -> usize {
-    let start = 0;
-    let end = max;
-    
-    // 分割は偶数にする前提
-    let limit = (max as f32 / 4.0).floor() as usize;
-    /*
-    let result = vec![0, 1, 2, 3]
-        .par_iter()
-        .map(|i| sift_table(max, i * limit, (i+1) * limit) )
-        .reduce_with( |r1, r2| r1.append(r2) );
-    */
-    let mut table1 = sift_table(max, 0, limit);
-    let mut table2 = sift_table(max, limit, limit * 2);
-    let mut table3 = sift_table(max, limit * 2, limit * 3);
-    let mut table4 = sift_table(max, limit * 3, max);
+    // 分割サイズ。分割は偶数にする前提
+    let core = 8;
+    let limit = (max as f32 / core as f32).floor() as usize;
 
-    let mut table = table1;
-    table.append(&mut table2);
-    table.append(&mut table3);
-    table.append(&mut table4);
+    let mut cores = vec![0; core];
+    for i in 0..core { cores[i]=i }
+
+    let table: Vec<usize> = cores
+        .into_par_iter()
+        .map(|i| sift_table(max, i * limit, (i+1) * limit) )
+        .flatten().collect();
 
     let results = table.iter().filter(|i| **i != 0 as usize);
-    // for i in results { print!("{} ", i); }
-    // return 0;
+    //for i in results { print!("{} ", i); }
+    //return 0;
     return results.count();
 }
 
 fn main() {
-    //println!("primes: {} 個", eratosthenes(1000) );
+    // println!("primes: {} 個", eratosthenes(1000) );
+    // println!("primes: {} 個", eratosthenes(1000) );
     println!("primes: {} 個", eratosthenes(10000000) );
    
     // for i in results {print!("{} ", i);}
