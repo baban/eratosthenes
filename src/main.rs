@@ -59,7 +59,7 @@ mod tests {
 
     #[test]
     fn eratosthenes_works() {
-        assert_eq!(170,  eratosthenes(1000));
+        assert_eq!(169,  eratosthenes(1000));
     }
 
     #[bench]
