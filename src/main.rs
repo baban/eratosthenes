@@ -17,8 +17,9 @@ fn split_eratosthenes(max: usize, start: usize, end: usize) -> Vec<usize> {
         let diff = start % i;
         let mut j = i;
         if start == 0 { j += i; }
-        while len >= j - diff {
-            table[j - diff] = 0;
+        j -= diff;
+        while len >= j {
+            table[j] = 0;
             j += i;
         }
     }
@@ -27,7 +28,7 @@ fn split_eratosthenes(max: usize, start: usize, end: usize) -> Vec<usize> {
 
 fn eratosthenes(max: usize) -> usize {
     // 分割サイズ。分割は偶数にする前提
-    let core = 8;
+    let core = 128;
     let limit = (max as f32 / core as f32).floor() as usize;
 
     let mut cores = vec![0; core];
