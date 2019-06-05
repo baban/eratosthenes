@@ -4,7 +4,7 @@ extern crate rayon;
 
 use rayon::prelude::*;
 
-fn sift_table(max: usize, start: usize, end: usize) -> Vec<usize> {
+fn split_eratosthenes(max: usize, start: usize, end: usize) -> Vec<usize> {
     let len = end - start;
     let mut table = vec![0; len+1];
 
@@ -35,7 +35,7 @@ fn eratosthenes(max: usize) -> usize {
 
     let table: Vec<usize> = cores
         .into_par_iter()
-        .map(|i| sift_table(max, i * limit, (i+1) * limit) )
+        .map(|i| split_eratosthenes(max, i * limit, (i+1) * limit) )
         .flatten().collect();
 
     let results = table.iter().filter(|i| **i != 0 as usize);
