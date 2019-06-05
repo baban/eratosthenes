@@ -4,7 +4,7 @@ extern crate rayon;
 
 use rayon::prelude::*;
 
-fn sift_table(max: usize, start: usize, end: usize) -> Vec<usize> {
+fn separate_eratosthenes(max: usize, start: usize, end: usize) -> Vec<usize> {
     let len = end - start;
     let mut table = vec![0; len+1];
 
@@ -14,11 +14,12 @@ fn sift_table(max: usize, start: usize, end: usize) -> Vec<usize> {
 
     let limit = (max as f32).sqrt().floor() as usize;
     for i in 2..limit {
-        let diff = start % i;
         let mut j = i;
+        let diff = start % i;
         if start == 0 { j += i; }
-        while len >= j - diff {
-            table[j - diff] = 0;
+        j -= diff;
+        while len >= j {
+            table[j] = 0;
             j += i;
         }
     }
@@ -27,7 +28,7 @@ fn sift_table(max: usize, start: usize, end: usize) -> Vec<usize> {
 
 fn eratosthenes(max: usize) -> usize {
     // 分割サイズ。分割は偶数にする前提
-    let core = 8;
+    let core = 128;
     let limit = (max as f32 / core as f32).floor() as usize;
 
     let mut cores = vec![0; core];
@@ -35,7 +36,7 @@ fn eratosthenes(max: usize) -> usize {
 
     let table: Vec<usize> = cores
         .into_par_iter()
-        .map(|i| sift_table(max, i * limit, (i+1) * limit) )
+        .map(|i| separate_eratosthenes(max, i * limit, (i+1) * limit) )
         .flatten().collect();
 
     let results = table.iter().filter(|i| **i != 0 as usize);
