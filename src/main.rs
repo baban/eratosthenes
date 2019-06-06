@@ -6,9 +6,10 @@ use rayon::prelude::*;
 
 fn separate_eratosthenes(max: usize, start: usize, end: usize) -> Vec<usize> {
     let len = end - start;
-    let mut table = vec![0; len+1];
+    let mut table = vec![1; len+1];
+    table[0] = 0;
 
-    for i in 1..len { table[i] = i + start; }
+    //for i in 1..len { table[i] = i + start; }
     // 1をtableから削除
     if start == 0 { table[1] = 0; }
 
