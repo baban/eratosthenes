@@ -4,6 +4,13 @@ extern crate test;
 extern crate rayon;
 
 use rayon::prelude::*;
+use std::{mem};
+
+#[cfg(target_arch = "x86")]
+use std::arch::x86::*;
+
+#[cfg(target_arch = "x86_64")]
+use std::arch::x86_64::*;
 
 fn separate_eratosthenes(limits: &Vec<u32>, start: u32, end: u32) -> Vec<u32> {
     let len = end - start;
@@ -16,8 +23,29 @@ fn separate_eratosthenes(limits: &Vec<u32>, start: u32, end: u32) -> Vec<u32> {
     for i in limits {
         let mut j = *i;
         let diff = start % i;
-        if start == 0 { j += i; }
+        if start == 0 { j += i * 8; }
         j -= diff;
+        unsafe {
+            let i32i = *i as i32;
+            let i32j = j as i32;
+            let mut points = _mm256_set_epi32(i32j + i32i, i32j + i32i * 2, i32j + i32i * 3, i32j + i32i * 4, i32j + i32i * 5, i32j + i32i * 6, i32j + i32i * 7, i32j + i32i * 8);
+            let skips = _mm256_set_epi32(i32i * 8, i32i * 8, i32i * 8, i32i * 8, i32i * 8, i32i * 8, i32i * 8, i32i * 8);
+            while len >= j + i * 8 {
+                let points_map: (i32, i32, i32, i32, i32, i32, i32, i32) = mem::transmute(points);
+                table[points_map.0 as usize] = 0;
+                table[points_map.1 as usize] = 0;
+                table[points_map.2 as usize] = 0;
+                table[points_map.3 as usize] = 0;
+                table[points_map.4 as usize] = 0;
+                table[points_map.5 as usize] = 0;
+                table[points_map.6 as usize] = 0;
+                table[points_map.7 as usize] = 0;
+                points = _mm256_add_epi32(points, skips);
+                j += i * 8;
+            }
+        }
+        j -= i * 8;
+        // 8倍すると余ってしまう末尾の処理
         while len >= j {
             table[j as usize] = 0;
             j += i;
