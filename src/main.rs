@@ -29,7 +29,8 @@ fn separate_eratosthenes(limits: &Vec<u32>, start: u32, end: u32) -> Vec<u32> {
 fn eratosthenes(max: u32) -> u32 {
     // 分割サイズ。分割は偶数にする前提
     let core = 64;
-    let limit = (max as f32 / core as f32).floor() as u32;
+    let limit = (max as f32).sqrt().floor() as u32;
+    let separated_size = (max as f32 / core as f32).floor() as u32;
 
     let mut limits = vec![0; (limit-2) as usize];
     for i in 2..limit { limits[(i-2) as usize] = i as u32 }
@@ -39,7 +40,7 @@ fn eratosthenes(max: u32) -> u32 {
     for i in 0..core { cores[i as usize] = i as u32 }
     let table: Vec<u32> = cores
         .into_par_iter()
-        .map(|i| separate_eratosthenes(&shifted_limits, i * limit, (i+1) * limit) )
+        .map(|i| separate_eratosthenes(&shifted_limits, i * separated_size, (i+1) * separated_size) )
         .flatten().collect();
 
     let results = table.iter().filter(|i| **i != 0);
